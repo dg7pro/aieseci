@@ -6,7 +6,7 @@
         <h1 class="mt-3 mb-5 text-info text-secondary">Administrator Dashboard</h1>
 
         <div class="row">
-            <div class="col-sm-4  mb-3">
+            <div class="col-sm-4 mb-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Courses/Groups</h5>
@@ -15,16 +15,83 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4  mb-3">
+            <div class="col-sm-4 mb-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Students/Users</h5>
                         <p class="card-text">Manage and enlist all students/users of this portal.</p>
-                        <a href="{{'/admin/list-users'}}" class="btn btn-warning">Users/Students</a>
+                        <a href="{{'/admin/list-students'}}" class="btn btn-warning">Users/Students</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Expenses</h5>
+                        <p class="card-text">Administrator can add day to day expenses in chronological order</p>
+                        <a href="{{'/admin/list-expense'}}" class="btn btn-success">Manage Expense</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Todo List</h5>
+                        <p class="card-text">Manage and assign your work. This way you will never forget imp. things</p>
+                        <a href="{{'/admin/list-todos'}}" class="btn btn-primary">Task Manager</a>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4  mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">New Query</h5>
+                        <p class="card-text">Quickly respond to new enquires and admission request </p>
+                        <a href="{{'/admin/list-queries'}}" class="btn btn-dark">Handle Queries</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4  mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Enrolments</h5>
+                        <p class="card-text">Student online Enrolled List and convert them into admissions</p>
+                        <a href="{{'/admin/enrolments'}}" class="btn btn-danger">New Enrolments</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4  mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Notices</h5>
+                        <p class="card-text">Display notices, news & latest updates on website</p>
+                        <a href="{{'/admin/list-notices'}}" class="btn btn-success">Notices</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4  mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Staff Management</h5>
+                        <p class="card-text">List and manage staff with the greatest efficacy and peace of mind</p>
+                        <a href="{{'/admin/list-staff'}}" class="btn btn-info">Manage Staff</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4  mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Employment</h5>
+                        <p class="card-text">View resumes and biodata of new employment requests</p>
+                        <a href="{{'/admin/employment-exchange'}}" class="btn btn-warning">Exchange</a>
+                    </div>
+                </div>
+            </div>
+
+            {{--<div class="col-sm-4  mb-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Payments/Revenue</h5>
@@ -32,7 +99,7 @@
                         <a href="{{'/admin/payment-orders'}}" class="btn btn-success">Payment Statics</a>
                     </div>
                 </div>
-            </div>
+            </div>--}}
 
             <div class="col-sm-4  mb-3">
                 <div class="card">

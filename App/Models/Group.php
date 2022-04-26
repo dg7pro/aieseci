@@ -72,18 +72,35 @@ class Group extends Model
     public static function update($arr){
 
         $name = $arr['name'];
-        $descr = $arr['descr'];
-        $price = $arr['price'];
-        $duration = $arr['duration'];
+        $short = $arr['short'];
+        $degree = $arr['degree'];
+        $fees = $arr['fees'];
+        $discount = $arr['discount'];
+        $instalments = $arr['installment'];
+        $term = $arr['term'];
+        $tenure = $arr['tenure'];
         $colour = $arr['color'];
         $open = $arr['open'];
         $deactive = $arr['deactive'];
         $id = $arr['id'];
 
-        $sql = "UPDATE groups SET name=?, descr=?, price=?, duration=?, color=?, open=?, deactive=? WHERE id=?";
+        $sql = "UPDATE groups SET name=?, short=?, degree=?, fees=?, discount=?, instalments=?, term=?, tenure=?, color=?, open=?, deactive=? WHERE id=?";
         $pdo=Model::getDB();
         $stmt=$pdo->prepare($sql);
-        return $stmt->execute([$name,$descr,$price,$duration,$colour,$open,$deactive,$id]);
+        return $stmt->execute([$name,$short,$degree,$fees,$discount,$instalments,$term,$tenure,$colour,$open,$deactive,$id]);
+
+    }
+
+    public static function updateMatter($arr): bool
+    {
+
+        $gid = $arr['content_id'];
+        $matter = $arr['matter'];
+
+        $sql = "UPDATE groups SET matter=? WHERE id=?";
+        $pdo=Model::getDB();
+        $stmt=$pdo->prepare($sql);
+        return $stmt->execute([$matter,$gid]);
 
     }
 
@@ -100,18 +117,22 @@ class Group extends Model
     public static function insert($arr){
 
         $name = $arr['name'];
-        $descr = $arr['descr'];
-        $price = $arr['price'];
-        $duration = $arr['duration'];
+        $short = $arr['short'];
+        $degree = $arr['degree'];
+        $fees = $arr['fees'];
+        $discount = $arr['discount'];
+        $instalments = $arr['instalments'];
+        $term = $arr['term'];
+        $tenure = $arr['tenure'];
         $color = $arr['color'];
         $open = $arr['open'];
         $deactive = $arr['deactive'];
 
 
-        $sql = "INSERT INTO groups(name,descr,price,duration,color,open,deactive) VALUES (?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO groups(name,short,degree,fees,discount,instalments,term,tenure,color,open,deactive) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         $pdo=Model::getDB();
         $stmt=$pdo->prepare($sql);
-        return $stmt->execute([$name,$descr,$price,$duration,$color,$open,$deactive]);
+        return $stmt->execute([$name,$short,$degree,$fees,$discount,$instalments,$term,$tenure,$color,$open,$deactive]);
 
     }
 
@@ -121,6 +142,29 @@ class Group extends Model
         $pdo=Model::getDB();
         $stmt=$pdo->prepare($sql);
         return $stmt->execute([$id]);
+
+    }
+
+    public static function getCC($cid){
+
+        $sql = "SELECT micro FROM groups WHERE id=?";
+        $pdo=Model::getDB();
+        $stmt=$pdo->prepare($sql);
+        $stmt->execute([$cid]);
+        return $stmt->fetchColumn(0);
+    }
+
+    public static function studentInCourse($cid, $fy): int
+    {
+
+        $type = 'Student';
+        $sql = "SELECT * FROM student_info WHERE course_id=? AND session=?";
+        $pdo=Model::getDB();
+        $stmt=$pdo->prepare($sql);
+        $stmt->execute([$cid, $fy]);
+        //return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $stmt->rowCount();
 
     }
 

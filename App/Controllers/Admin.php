@@ -8,6 +8,7 @@ use App\Auth;
 use App\Flash;
 use App\Models\Content;
 use App\Models\File;
+use App\Models\FY;
 use App\Models\Group;
 use App\Models\Media;
 use App\Models\Subject;
@@ -106,9 +107,17 @@ class Admin extends Administered
     /**
      * List all Users
      */
-    public function listUsersAction(){
+    public function listStudentsAction(){
 
-        View::renderBlade('admin.list_user');
+        $fys = FY::fetchAll();
+        $grps = Group::fetchAll();
+        View::renderBlade('admin.list_students',['grps'=>$grps,'fys'=>$fys]);
+
+    }
+
+    public function listStaffAction(){
+
+        View::renderBlade('admin.list_staff');
 
     }
 
@@ -152,6 +161,38 @@ class Admin extends Administered
     //=============================================================================
     // Contents Update through ck editor
     //=============================================================================
+
+    /**
+     * Show text editor for course details editing
+     */
+    public function detailsAction(){
+
+        $id = $_GET['id'];
+        $content = Group::fetch($id);
+        Auth::rememberBackPage();
+        View::renderBlade('admin.details',['content'=>$content]);
+
+    }
+
+    /**
+     *  Save edited content
+     */
+    public function saveDetailsAction(){
+
+        if(isset($_POST['update_content'])){
+
+            $result = Group::updateMatter($_POST);
+            if($result){
+                Flash::addMessage('Content Updated Successfully', Flash::SUCCESS);
+                $this->redirect(Auth::getBackToPage());
+            }
+        }else{
+
+            Flash::addMessage('Could not update. Something went wrong', Flash::DANGER);
+            $this->redirect(Auth::getBackToPage());
+        }
+
+    }
 
     /**
      * Show text editor for content editing
@@ -402,5 +443,57 @@ class Admin extends Administered
 
 
     }
+
+    /* ==================================================================
+     * New Block
+     * Admin Groups Block 6 Functions
+     * ====================================================================
+     * */
+
+    /**
+     * List expenses
+     * through ajax call
+     */
+    public function listExpenseAction()
+    {
+        View::renderBlade('admin.list_expense');
+    }
+
+    /**
+     * List todos
+     * through ajax call
+     */
+    public function listTodosAction()
+    {
+        View::renderBlade('admin.list_todos');
+    }
+
+    /**
+     * List notices
+     * through ajax call
+     */
+    public function listNoticesAction()
+    {
+        View::renderBlade('admin.list_notices');
+    }
+
+    /**
+     * List notices
+     * through ajax call
+     */
+    public function listQueriesAction()
+    {
+        View::renderBlade('admin.list_queries');
+    }
+
+
+
+
+
+
+
+
+
+
 
 }

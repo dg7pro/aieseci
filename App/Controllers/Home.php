@@ -11,6 +11,7 @@ use App\Models\Content;
 use App\Models\File;
 use App\Models\Group;
 use App\Models\Order;
+use App\Models\Student;
 use App\Models\Subject;
 use App\Models\UserGroup;
 use Core\Controller;
@@ -74,5 +75,19 @@ class Home extends Controller
         $notes = Group::fetchAll();
         View::renderBlade('home/catalog',['eNotes'=>$notes]);
     }
+
+    public function sessionAction(){
+
+        var_dump($_SESSION);
+    }
+
+    public function testAction(){
+
+        //$info = Student::studentInCourse(5,2223);
+
+        $info = Student::generateEnrollmentNo(2);
+        var_dump($info);
+    }
+
 
 }

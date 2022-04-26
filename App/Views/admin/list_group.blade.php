@@ -96,18 +96,51 @@
                                 <input type="text" class="form-control" id="new-group-name">
                             </div>
                             <div class="form-group">
-                                <label for="new-group-descr" class="col-form-label">Description:</label>
-                                <textarea class="form-control" id="new-group-descr"></textarea>
+                                <label for="new-group-short" class="col-form-label">Abbreviation:</label>
+                                <input type="text" class="form-control" id="new-group-short">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-group-degree" class="col-form-label">Degree:</label>
+                                <textarea class="form-control" id="new-group-degree"></textarea>
                             </div>
                             <div class="form-group form-row">
                                 <div class="col">
-                                    <label for="new-group-price" class="col-form-label">Price:</label>
-                                    <input type="text" class="form-control" id="new-group-price">
+                                    <label for="new-group-fees" class="col-form-label">Fees:</label>
+                                    <input type="text" class="form-control" id="new-group-fees">
                                 </div>
                                 <div class="col">
-                                    <label for="new-group-duration" class="col-form-label">Duration:</label>
-                                    <select class="form-control" id="new-group-duration">
+                                    <label for="new-group-discount" class="col-form-label">Discount:</label>
+                                    <input type="text" class="form-control" id="new-group-discount">
+                                </div>
+                                <div class="col">
+                                    <label for="new-group-instalments" class="col-form-label">Instalments:</label>
+                                    <select class="form-control" id="new-group-instalments">
                                         <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-row">
+                                <div class="col">
+                                    <label for="new-group-term" class="col-form-label">Term:</label>
+                                    <select class="form-control" id="new-group-term">
+                                        <option value="">Select</option>
+                                        @for($i=1;$i<=10;$i++)
+                                            <option value={{$i}}>{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                {{--<div class="col">
+                                    <label for="new-group-term" class="col-form-label">Term:</label>
+                                    <input type="text" class="form-control" id="new-group-term">
+                                </div>--}}
+                                <div class="col">
+                                    <label for="new-group-tenure" class="col-form-label">Tenure:</label>
+                                    <select class="form-control" id="new-group-tenure">
+                                        <option value="">Select</option>
+                                        <option value="month">Month</option>
                                         <option value="sem">Sem</option>
                                         <option value="year">Year</option>
                                     </select>
@@ -182,17 +215,48 @@
                                 <input type="text" class="form-control" id="group-name">
                             </div>
                             <div class="form-group">
-                                <label for="group-descr" class="col-form-label">Description:</label>
-                                <textarea class="form-control" id="group-descr"></textarea>
+                                <label for="group-short" class="col-form-label">Abbreviation</label>
+                                <input type="text" class="form-control" id="group-short">
                             </div>
+                            <div class="form-group">
+                                <label for="group-degree" class="col-form-label">Degree/Certificate:</label>
+                                <textarea class="form-control" id="group-degree"></textarea>
+                            </div>
+
+                            {{--Fees Block Start--}}
                             <div class="form-group form-row">
                                 <div class="col">
-                                    <label for="group-price" class="col-form-label">Price:</label>
-                                    <input type="text" class="form-control" id="group-price">
+                                    <label for="group-fees" class="col-form-label">Fees:</label>
+                                    <input type="text" class="form-control" id="group-fees">
                                 </div>
                                 <div class="col">
-                                    <label for="group-duration" class="col-form-label">Duration:</label>
-                                    <select class="form-control" id="group-duration">
+                                    <label for="group-discount" class="col-form-label">Discount:</label>
+                                    <input type="text" class="form-control" id="group-discount">
+                                </div>
+                                <div class="col">
+                                    <label for="group-installment" class="col-form-label">Installments:</label>
+                                    <select class="form-control" id="group-installment">
+                                        <option value="">Select</option>
+                                        <option value="Yes">Available</option>
+                                        <option value="No">Not Available</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {{--Duration Block Start--}}
+                            <div class="form-group form-row">
+                                <div class="col">
+                                    <label for="group-term" class="col-form-label">Term:</label>
+                                    <select class="form-control" id="group-term">
+                                        <option value="">Select</option>
+                                        @for($i=1;$i<=10;$i++)
+                                            <option value={{$i}}>{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="group-tenure" class="col-form-label">Tenure:</label>
+                                    <select class="form-control" id="group-tenure">
                                         <option value="">Select</option>
                                         <option value="sem">Sem</option>
                                         <option value="year">Year</option>
@@ -291,9 +355,13 @@
                 console.log(data);
                 var group = JSON.parse(data);
                 $('#group-name').val(group.name);
-                $('#group-descr').val(group.descr);
-                $('#group-price').val(group.price);
-                $('#group-duration').val(group.duration);
+                $('#group-short').val(group.short);
+                $('#group-degree').val(group.degree);
+                $('#group-fees').val(group.fees);
+                $('#group-discount').val(group.discount);
+                $('#group-installment').val(group.instalments);
+                $('#group-term').val(group.term);
+                $('#group-tenure').val(group.tenure);
                 $('#group-color').val(group.color);
                 $('#group-open').val(group.open);
                 $('#group-deactive').val(group.deactive);
@@ -306,18 +374,26 @@
         function updateGroupInfo(){
 
             var name = $('#group-name').val();
-            var descr = $('#group-descr').val();
-            var price = $('#group-price').val();
-            var duration = $('#group-duration').val();
+            var short = $('#group-short').val();
+            var degree = $('#group-degree').val();
+            var fees = $('#group-fees').val();
+            var discount = $('#group-discount').val();
+            var installment = $('#group-installment').val();
+            var term = $('#group-term').val();
+            var tenure = $('#group-tenure').val();
             var color = $('#group-color').val();
             var open = $('#group-open').val();
             var deactive = $('#group-deactive').val();
             var id = $('#group-id').val();
             $.post("/adjax/updateSingleGroupRecord",{
                 name:name,
-                descr:descr,
-                price:price,
-                duration:duration,
+                short:short,
+                degree:degree,
+                fees:fees,
+                discount:discount,
+                installment:installment,
+                term:term,
+                tenure:tenure,
                 color:color,
                 open:open,
                 deactive:deactive,
@@ -369,18 +445,26 @@
         function createNewGroup(){
 
             var name = $('#new-group-name').val();
-            var descr = $('#new-group-descr').val();
-            var price = $('#new-group-price').val();
-            var duration = $('#new-group-duration').val();
+            var short = $('#new-group-short').val();
+            var degree = $('#new-group-degree').val();
+            var fees = $('#new-group-fees').val();
+            var discount = $('#new-group-discount').val();
+            var instalments = $('#new-group-instalments').val();
+            var term = $('#new-group-term').val();
+            var tenure = $('#new-group-tenure').val();
             var color = $('#new-group-color').val();
             var open = $('#new-group-open').val();
             var deactive = $('#new-group-deactive').val();
 
             $.post("/adjax/insertNewGroupRecord",{
                 name:name,
-                descr:descr,
-                price:price,
-                duration:duration,
+                short:short,
+                degree:degree,
+                fees:fees,
+                discount:discount,
+                instalments:instalments,
+                term:term,
+                tenure:tenure,
                 color:color,
                 open:open,
                 deactive:deactive

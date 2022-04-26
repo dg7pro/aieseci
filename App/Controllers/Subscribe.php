@@ -31,7 +31,7 @@ class Subscribe extends Controller
         /*var_dump($groups);
         exit();*/
 
-        View::renderBlade('/subscribe/index',['groups'=>$groups,'subscribed'=>$course_list,'new_user_flag'=>$new_user_flag]);
+        View::renderBlade('/subscribe/index2',['groups'=>$groups,'subscribed'=>$course_list,'new_user_flag'=>$new_user_flag]);
     }
 
 }

@@ -14,7 +14,7 @@
                     <a class="nav-link" href="{{'/account/welcome'}}"><mark> Dashboard</mark></a>
                 </li>--}}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'/subscribe/index'}}"><mark> Courses</mark></a>
+                    <a class="nav-link" href="{{'/course/index'}}"><mark> Courses</mark></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/subscribe/index'}}"><mark> Placement</mark></a>
@@ -53,7 +53,7 @@
 
             @else
                 <li class="nav-item">
-                    <a class="nav-link" href="{{'/subscribe/index'}}"><mark> Courses</mark></a>
+                    <a class="nav-link" href="{{'/course/index'}}"><mark> Courses</mark></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{'/subscribe/index'}}"><mark> Placement</mark></a>
