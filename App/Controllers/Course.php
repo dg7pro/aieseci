@@ -13,7 +13,8 @@ class Course extends Controller
 
         $groups = Group::fetchAll();
 
-        View::renderBlade('/course/index',['groups'=>$groups]);
+        //View::renderBlade('/course/index',['groups'=>$groups]);
+        View::renderBlade('/course/w3index2',['groups'=>$groups]);
     }
 
     /**
@@ -28,7 +29,8 @@ class Course extends Controller
             $this->redirect('/home/page-not-found');
         }
         $content = Group::fetch($course_id);
-        View::renderBlade('course.details',['content'=>$content]);
+//        View::renderBlade('course.details',['content'=>$content]);
+        View::renderBlade('course.single_course',['content'=>$content]);
 
     }
 

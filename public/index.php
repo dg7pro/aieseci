@@ -40,8 +40,12 @@ $router = new Core\Router();
 
 // Add the routes
 $router->add('', ['controller' => 'Home', 'action' => 'index']);
+$router->add('courses', ['controller' => 'Course', 'action' => 'index']);
+$router->add('contact', ['controller' => 'Contact', 'action' => 'index']);
+$router->add('enroll', ['controller' => 'Home', 'action' => 'enroll']);
+$router->add('notices', ['controller' => 'Home', 'action' => 'notices']);
 $router->add('login', ['controller' =>'Account','action'=>'login']);
-$router->add('admin', ['controller' =>'Admin','action'=>'dashboard']);
+$router->add('admin', ['controller' =>'Admin','action'=>'index']);
 $router->add('{controller}/{action}');
 //$router->add('{controller}/{action}/{un:[a-zA-Z0-9-\.]+}');
 //$router->add('{controller}/{action}/{pid:([A-Z]{2}[0-9]{5})+}');

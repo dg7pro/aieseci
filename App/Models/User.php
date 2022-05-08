@@ -35,7 +35,7 @@ class User extends \Core\Model
      * User constructor.
      * @param array $data
      */
-    public function __construct($data=[])
+    public function __construct(array $data=[])
     {
         foreach ($data as $key => $value){
             $this->$key=$value;

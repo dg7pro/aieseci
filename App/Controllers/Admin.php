@@ -26,7 +26,8 @@ class Admin extends Administered
      */
     public function indexAction()
     {
-        View::renderBlade('admin.index');
+        //View::renderBlade('admin.index');
+        View::renderBlade('admin.w3index');
     }
 
     /* ==================================================================
@@ -41,7 +42,7 @@ class Admin extends Administered
      */
     public function listGroupAction()
     {
-        View::renderBlade('admin.list_group');
+        View::renderBlade('admin.w3_list_group');
     }
 
     /**
@@ -111,13 +112,15 @@ class Admin extends Administered
 
         $fys = FY::fetchAll();
         $grps = Group::fetchAll();
-        View::renderBlade('admin.list_students',['grps'=>$grps,'fys'=>$fys]);
+        View::renderBlade('admin.w3_list_students',['grps'=>$grps,'fys'=>$fys]);
 
     }
 
     public function listStaffAction(){
 
-        View::renderBlade('admin.list_staff');
+        $fys = FY::fetchAll();
+        $grps = Group::fetchAll();
+        View::renderBlade('admin.w3_list_staffs',['grps'=>$grps,'fys'=>$fys]);
 
     }
 
@@ -456,7 +459,7 @@ class Admin extends Administered
      */
     public function listExpenseAction()
     {
-        View::renderBlade('admin.list_expense');
+        View::renderBlade('admin.w3_list_expenses');
     }
 
     /**
@@ -465,7 +468,7 @@ class Admin extends Administered
      */
     public function listTodosAction()
     {
-        View::renderBlade('admin.list_todos');
+        View::renderBlade('admin.w3_list_todos');
     }
 
     /**
@@ -474,17 +477,27 @@ class Admin extends Administered
      */
     public function listNoticesAction()
     {
-        View::renderBlade('admin.list_notices');
+        View::renderBlade('admin.w3_list_notices');
     }
 
     /**
      * List notices
      * through ajax call
      */
-    public function listQueriesAction()
+    public function listEnquiresAction()
     {
-        View::renderBlade('admin.list_queries');
+        View::renderBlade('admin.w3_list_enquires');
     }
+
+    /**
+     * List enrolls
+     * through ajax call
+     */
+    public function listEnrollsAction()
+    {
+        View::renderBlade('admin.w3_list_enrolls');
+    }
+
 
 
 

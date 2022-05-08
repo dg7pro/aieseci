@@ -8,8 +8,10 @@ use App\Flash;
 use App\Lib\Helpers;
 use App\Mail;
 use App\Models\Content;
+use App\Models\Enroll;
 use App\Models\File;
 use App\Models\Group;
+use App\Models\Notice;
 use App\Models\Order;
 use App\Models\Student;
 use App\Models\Subject;
@@ -32,7 +34,10 @@ class Home extends Controller
      */
     public function indexAction()
     {
-        View::renderBlade('home/index');
+        //View::renderBlade('home/index');
+
+        $groups = Group::fetchAll();
+        View::renderBlade('home/w3index',['groups'=>$groups]);
     }
 
     /**
@@ -87,6 +92,67 @@ class Home extends Controller
 
         $info = Student::generateEnrollmentNo(2);
         var_dump($info);
+    }
+
+
+    /**
+     * Enrollment Page
+     *
+     * @return void
+     */
+    public function enrollAction()
+    {
+        View::renderBlade('home.w3enroll');
+    }
+
+    /**
+     * Enrollment Page
+     *
+     * @return void
+     */
+    public function enrollSuccessAction()
+    {
+        View::renderBlade('home.w3_enroll_success');
+    }
+
+
+
+
+    /**
+     * Enroll Student
+     *
+     * @return void
+     */
+    public function enrollStudent(){
+
+//        var_dump($_POST);
+//        exit();
+
+        $enroll = new Enroll($_POST);
+
+        if($enroll->save()){
+
+            $this->redirect('/home/success');
+
+        }else{
+
+            foreach($enroll->errors as $error){
+                Flash::addMessage($error,'danger');
+            }
+            View::renderBlade('home.w3enroll',['arr'=>$_POST]);
+
+        }
+    }
+
+    /**
+     * Enrollment Page
+     *
+     * @return void
+     */
+    public function noticesAction()
+    {
+        $notices = Notice::fetchAll();
+        View::renderBlade('home.notices',['notices'=>$notices]);
     }
 
 

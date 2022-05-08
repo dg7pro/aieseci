@@ -4,12 +4,15 @@
 namespace App\Controllers;
 
 
+use App\Models\Enquiry;
+use App\Models\Enroll;
 use App\Models\Expense;
 use App\Models\File;
 use App\Models\Group;
 use App\Models\Notice;
 use App\Models\Order;
 use App\Models\Query;
+use App\Models\Staff;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Todos;
@@ -79,85 +82,6 @@ class Adjax extends Administered
         }
     }
 
-    /* ==================================================================
-     * Expense: Ajax 1 Functions Bundle
-     * Used in list_expense view
-     * ====================================================================
-     * */
-    /**
-     * Fetch all expenses
-     */
-    public function fetchExpenseRecords(){
-
-        if(isset($_POST['readrecord'])){
-            $data = '<table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Amount</th>                                      
-                    <th scope="col">Update</th>
-                    <th scope="col">Delete</th>                   
-                </tr></thead><tbody>';
-
-            $results = Expense::fetchAll();
-            $num = count($results);
-
-            if($num>0){
-                foreach($results as $row) {
-                    $data .= '<tr>
-                    <td>'.$row['id'].'</td>                
-                    <td>'.$row['dated'].'</td>
-                    <td>'.$row['tag'].'</td>
-                    <td>Rs. '.$row['amount'].'</td>
-                    <td><button onclick="getExpenseInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-info">Edit</button></td>                 
-                    <td><button onclick="deleteExpenseInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-danger">Del</button></td>
-                </tr>';
-                }
-            }
-
-            $data .='</tbody></table>';
-            echo $data;
-        }
-    }
-
-    /**
-     * Add new group
-     */
-    public function insertNewExpenseRecord(){
-
-        if(isset($_POST['amount']) && $_POST['amount']!=''){
-
-            $re = Expense::insert($_POST);
-            if(!$re){
-                echo 'Please fill all the fields correctly';
-            }
-            echo 'New Group Created';
-
-        }
-    }
-
-    /**
-     *  Fetch group
-     */
-    public function fetchSingleExpenseRecord(){
-
-        if(isset($_POST['expenseId']) && isset($_POST['expenseId'])!=''){
-
-            $expense_id = $_POST['expenseId'];
-            $expenseInfo = Expense::fetch($expense_id);
-            $num = count($expenseInfo);
-            if($num>0){
-                $response = $expenseInfo;
-            }else{
-                $response['status']=200;
-                $response['message']="No data found!";
-            }
-            echo json_encode($response);
-
-        }
-    }
 
     /* ========================================================
      * Student
@@ -180,87 +104,6 @@ class Adjax extends Administered
         }
     }
 
-    /* ==================================================================
-     * Todos: Ajax 1 Functions Bundle
-     * Used in list_expense view
-     * ====================================================================
-     * */
-    /**
-     * Fetch all expenses
-     */
-    public function fetchTodosRecords(){
-
-        if(isset($_POST['readrecord'])){
-            $data = '<table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Task</th>                   
-                    <th scope="col">Deadline</th>                                      
-                    <th scope="col">By</th>
-                    <th scope="col">Complete</th>                   
-                    <th scope="col">Edit</th>                   
-                    <th scope="col">Del</th>                   
-                </tr></thead><tbody>';
-
-            $results = Todos::fetchAll();
-            $num = count($results);
-
-            if($num>0){
-                foreach($results as $row) {
-                    $data .= '<tr>
-                    <td>'.$row['id'].'</td>                
-                    <td>'.$row['task'].'</td>
-                    <td>'.$row['deadline'].'</td>
-                    <td>'.$row['fn'].'</td>
-                    <td>'.$row['is_complete'].'</td>
-                    <td><button onclick="getTodosInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-info">Edit</button></td>                 
-                    <td><button onclick="deleteTodosInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-danger">Del</button></td>
-                </tr>';
-                }
-            }
-
-            $data .='</tbody></table>';
-            echo $data;
-        }
-    }
-
-    /**
-     * Add new group
-     */
-    public function insertNewTodosRecord(){
-
-        if(isset($_POST['task']) && $_POST['task']!=''){
-
-            $re = Todos::insert($_POST);
-            if(!$re){
-                echo 'Please fill all the fields correctly';
-            }
-            echo 'New Task Created';
-
-        }
-    }
-
-    /**
-     *  Fetch group
-     */
-    public function fetchSingleTodosRecord(){
-
-        if(isset($_POST['expenseId']) && isset($_POST['expenseId'])!=''){
-
-            $expense_id = $_POST['expenseId'];
-            $expenseInfo = Todos::fetch($expense_id);
-            $num = count($expenseInfo);
-            if($num>0){
-                $response = $expenseInfo;
-            }else{
-                $response['status']=200;
-                $response['message']="No data found!";
-            }
-            echo json_encode($response);
-
-        }
-    }
 
     /**
      *  Fetch group
@@ -291,7 +134,7 @@ class Adjax extends Administered
 
 //        var_dump($_POST);
 //        exit();
-        if(isset($_POST['id']) && $_POST['id']!=''){
+        if(isset($_POST['expenseId']) && $_POST['expenseId']!=''){
 
             $re = Query::update($_POST);
             if($re){
@@ -305,12 +148,6 @@ class Adjax extends Administered
         }
     }
 
-
-
-
-
-
-
     /* ==================================================================
      * Group: Ajax 5 Functions Bundle
      * Used in list_group view
@@ -323,7 +160,7 @@ class Adjax extends Administered
     public function fetchGroupRecords(){
 
         if(isset($_POST['readrecord'])){
-            $data = '<table class="table table-bordered">
+            $data = '<div class="table-responsive"><table class="table table-bordered">
                 <thead>
                 <tr>
                     <th scope="col">Id</th>
@@ -361,7 +198,7 @@ class Adjax extends Administered
                 }
             }
 
-            $data .='</tbody></table>';
+            $data .='</tbody></table></div>';
             echo $data;
         }
     }
@@ -1352,6 +1189,1248 @@ class Adjax extends Administered
 
         $output .= '</div>';
 
+
+        echo $output;
+    }
+
+
+    // ====================================================
+    // Expenses
+    // ==================================================
+
+    /**
+     * Fetch all expenses
+     */
+    public function fetchExpenseRecords(){
+
+        if(isset($_POST['readrecord'])){
+            $data = '<table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Amount</th>                                      
+                    <th scope="col">Update</th>
+                    <th scope="col">Delete</th>                   
+                </tr></thead><tbody>';
+
+            $results = Expense::fetchAll();
+            $num = count($results);
+
+            if($num>0){
+                foreach($results as $row) {
+                    $data .= '<tr>
+                    <td>'.$row['id'].'</td>                
+                    <td>'.$row['dated'].'</td>
+                    <td>'.$row['tag'].'</td>
+                    <td>Rs. '.$row['amount'].'</td>
+                    <td><button onclick="getExpenseInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-info">Edit</button></td>                 
+                    <td><button onclick="deleteExpenseInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-danger">Del</button></td>
+                </tr>';
+                }
+            }
+
+            $data .='</tbody></table>';
+            echo $data;
+        }
+    }
+
+    /**
+     * Add new group
+     */
+    public function insertNewExpenseRecord(){
+
+        if(isset($_POST['amount']) && $_POST['amount']!=''){
+
+            $re = Expense::insert($_POST);
+            if(!$re){
+                echo 'Please fill all the fields correctly';
+            }
+            echo 'New Group Created';
+
+        }
+    }
+
+    /**
+     * Search expenses dynamically
+     */
+    public function searchExpenses(){
+
+        $limit = 10;
+        $page = 1;
+
+        if($_POST['page'] > 1){
+            $start = (($_POST['page']-1) * $limit);
+            $page = $_POST['page'];
+        }else{
+            $start = 0;
+        }
+
+        $results = Expense::liveSearch($start,$limit);
+        $total_data = Expense::liveSearchCount();
+
+        $output = '<label>Total Records - '.$total_data.'</label>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Amount</th>                                      
+                    <th scope="col">Update</th>
+                    <th scope="col">Delete</th>  
+                </tr>';
+
+        if($total_data > 0){
+
+            foreach($results as $row){
+                $output .= '<tr>
+                <td>'.$row['id'].'</td>                
+                    <td>'.$row['dated'].'</td>
+                    <td>'.$row['tag'].'</td>
+                    <td>Rs. '.$row['amount'].'</td>
+                    <td><button onclick="getExpenseInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-info">Edit</button></td>                 
+                    <td><button onclick="deleteExpenseInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-danger">Del</button></td>
+                </tr>';
+            }
+
+        }
+        else{
+
+            $output .= '<tr><td colspan="4">No data found</td></tr>';
+
+        }
+
+        $output .= '</table></br>
+            <div align="center">
+                <ul class="pagination">
+        ';
+
+        $total_links = ceil($total_data/$limit);
+        $previous_link = '';
+        $next_link = '';
+        $page_link ='';
+
+
+        if($total_links > 4){
+            if($page<5){
+                for($count=1; $count<=5; $count++){
+
+                    $page_array[]=$count;
+                }
+                $page_array[]='...';
+                $page_array[]=$total_links;
+            }else{
+                $end_limit = $total_links - 5 ;
+                if($page > $end_limit){
+
+                    $page_array[] = 1;
+                    $page_array[] = '...';
+
+                    for($count=$end_limit; $count<=$total_links; $count++){
+                        $page_array[]=$count;
+                    }
+                }else{
+                    $page_array[]=1;
+                    $page_array[]='...';
+                    for($count = $page-1; $count<=$page+1; $count++){
+                        $page_array[]=$count;
+                    }
+                    $page_array[]=1;
+                    $page_array[]=$total_links;
+                }
+            }
+        }
+        else{
+            for($count=1; $count <= $total_links; $count++){
+                $page_array[] = $count;
+            }
+        }
+        // checked
+        $page_array[]=0;
+        for($count = 0; $count < count($page_array); $count++)
+        {
+            if($page == $page_array[$count])
+            {
+                $page_link .= '<li class="page-item active">
+                      <a class="page-link" href="#">'.$page_array[$count].' <span class="sr-only">(current)</span></a>
+                    </li>
+                    ';
+
+                $previous_id = $page_array[$count] - 1;
+                if($previous_id > 0)
+                {
+                    $previous_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$previous_id.'">Previous</a></li>';
+                }
+                else
+                {
+                    $previous_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Previous</a>
+                      </li>
+                      ';
+                }
+                $next_id = $page_array[$count] + 1;
+                if($next_id >= $total_links)
+                {
+                    $next_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                      </li>';
+                }
+                else
+                {
+                    $next_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$next_id.'">Next</a></li>';
+                }
+            }
+            else
+            {
+                if($page_array[$count] == '...')
+                {
+                    $page_link .= '
+                      <li class="page-item disabled">
+                          <a class="page-link" href="#">...</a>
+                      </li>
+                      ';
+                }
+                else
+                {
+                    $page_link .= '<li class="page-item"><a class="page-link" href="javascript:void(0)" 
+                    data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>';
+                }
+            }
+        }
+
+        $output .= $previous_link . $page_link . $next_link;
+        $output .= '</ul></div>';
+
+        echo $output;
+    }
+
+    /**
+     *  Fetch group
+     */
+    public function fetchSingleExpenseRecord(){
+
+        if(isset($_POST['expenseId']) && isset($_POST['expenseId'])!=''){
+
+            $expense_id = $_POST['expenseId'];
+            $expenseInfo = Expense::fetch($expense_id);
+            $num = count($expenseInfo);
+            if($num>0){
+                $response = $expenseInfo;
+            }else{
+                $response['status']=200;
+                $response['message']="No data found!";
+            }
+            echo json_encode($response);
+
+        }
+    }
+
+    /**
+     * Update expense
+     */
+    public function updateSingleExpenseRecord(){
+
+//        var_dump($_POST);
+//        exit();
+        if(isset($_POST['id']) && $_POST['id']!=''){
+
+            $re = Expense::update($_POST);
+            if($re){
+                echo 'Basic Info Updated';
+
+            }else{
+                echo 'Something went Wrong';
+            }
+
+
+        }
+    }
+
+    /**
+     * Delete expense
+     */
+    public function deleteExpenseRecord(){
+
+        if(isset($_POST['id'])){
+            $response['status']=false;
+            $response['message']='Application says Don\'t delete anything, just change or modify it to make new entry' ;
+            echo json_encode($response);
+        }
+    }
+
+
+    // ====================================================
+    // Todos Functions
+    // ==================================================
+
+    /**
+     * Fetch all todos ~ Deprecated
+     */
+    public function fetchTodosRecords(){
+
+        if(isset($_POST['readrecord'])){
+            $data = '<table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Task</th>                   
+                    <th scope="col">Deadline</th>                                      
+                    <th scope="col">By</th>
+                    <th scope="col">Complete</th>                   
+                    <th scope="col">Edit</th>                   
+                    <th scope="col">Del</th>                   
+                </tr></thead><tbody>';
+
+            $results = Todos::fetchAll();
+            $num = count($results);
+
+            if($num>0){
+                foreach($results as $row) {
+                    $data .= '<tr>
+                    <td>'.$row['id'].'</td>                
+                    <td>'.$row['task'].'</td>
+                    <td>'.$row['deadline'].'</td>
+                    <td>'.$row['fn'].'</td>
+                    <td>'.$row['is_complete'].'</td>
+                    <td><button onclick="getTodosInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-info">Edit</button></td>                 
+                    <td><button onclick="deleteTodosInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-danger">Del</button></td>
+                </tr>';
+                }
+            }
+
+            $data .='</tbody></table>';
+            echo $data;
+        }
+    }
+
+    /**
+     * Add new todos
+     */
+    public function insertNewTodoRecord(){
+
+        if(isset($_POST['task']) && $_POST['task']!=''){
+
+            $re = Todos::insert($_POST);
+            if(!$re){
+                echo 'Please fill all the fields correctly';
+            }
+            echo 'New Task Created';
+
+        }
+    }
+
+
+    /**
+     * Search todos dynamically
+     */
+    public function searchTodos(){
+
+        $limit = 10;
+        $page = 1;
+
+        if($_POST['page'] > 1){
+            $start = (($_POST['page']-1) * $limit);
+            $page = $_POST['page'];
+        }else{
+            $start = 0;
+        }
+
+        $results = Todos::liveSearch($start,$limit);
+        $total_data = Todos::liveSearchCount();
+
+        $output = '<label>Total Records - '.$total_data.'</label>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Task</th>
+                    <th scope="col">Deadline</th>
+                    <th scope="col">By</th>                                      
+                    <th scope="col">Complete</th>                   
+                    <th scope="col">Edit</th>                   
+                    <th scope="col">Del</th>      
+                </tr>';
+
+        if($total_data > 0){
+
+            foreach($results as $row){
+                $output .= '<tr>
+                    <td>'.$row['id'].'</td>                
+                    <td>'.$row['task'].'</td>
+                    <td>'.$row['deadline'].'</td>
+                    <td>'.$row['fn'].'</td>
+                    <td>'.$row['is_complete'].'</td>
+                    <td><button onclick="getTodoInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-info">Edit</button></td>                 
+                    <td><button onclick="deleteTodoInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-danger">Del</button></td>
+                </tr>';
+            }
+
+        }
+        else{
+
+            $output .= '<tr><td colspan="4">No data found</td></tr>';
+
+        }
+
+        $output .= '</table></br>
+            <div align="center">
+                <ul class="pagination">
+        ';
+
+        $total_links = ceil($total_data/$limit);
+        $previous_link = '';
+        $next_link = '';
+        $page_link ='';
+
+
+        if($total_links > 4){
+            if($page<5){
+                for($count=1; $count<=5; $count++){
+
+                    $page_array[]=$count;
+                }
+                $page_array[]='...';
+                $page_array[]=$total_links;
+            }else{
+                $end_limit = $total_links - 5 ;
+                if($page > $end_limit){
+
+                    $page_array[] = 1;
+                    $page_array[] = '...';
+
+                    for($count=$end_limit; $count<=$total_links; $count++){
+                        $page_array[]=$count;
+                    }
+                }else{
+                    $page_array[]=1;
+                    $page_array[]='...';
+                    for($count = $page-1; $count<=$page+1; $count++){
+                        $page_array[]=$count;
+                    }
+                    $page_array[]=1;
+                    $page_array[]=$total_links;
+                }
+            }
+        }
+        else{
+            for($count=1; $count <= $total_links; $count++){
+                $page_array[] = $count;
+            }
+        }
+        // checked
+        $page_array[]=0;
+        for($count = 0; $count < count($page_array); $count++)
+        {
+            if($page == $page_array[$count])
+            {
+                $page_link .= '<li class="page-item active">
+                      <a class="page-link" href="#">'.$page_array[$count].' <span class="sr-only">(current)</span></a>
+                    </li>
+                    ';
+
+                $previous_id = $page_array[$count] - 1;
+                if($previous_id > 0)
+                {
+                    $previous_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$previous_id.'">Previous</a></li>';
+                }
+                else
+                {
+                    $previous_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Previous</a>
+                      </li>
+                      ';
+                }
+                $next_id = $page_array[$count] + 1;
+                if($next_id >= $total_links)
+                {
+                    $next_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                      </li>';
+                }
+                else
+                {
+                    $next_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$next_id.'">Next</a></li>';
+                }
+            }
+            else
+            {
+                if($page_array[$count] == '...')
+                {
+                    $page_link .= '
+                      <li class="page-item disabled">
+                          <a class="page-link" href="#">...</a>
+                      </li>
+                      ';
+                }
+                else
+                {
+                    $page_link .= '<li class="page-item"><a class="page-link" href="javascript:void(0)" 
+                    data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>';
+                }
+            }
+        }
+
+        $output .= $previous_link . $page_link . $next_link;
+        $output .= '</ul></div>';
+
+        echo $output;
+    }
+
+    /**
+     *  Fetch group
+     */
+    public function fetchSingleTodoRecord(){
+
+        if(isset($_POST['todoId']) && isset($_POST['todoId'])!=''){
+
+            $todo_id = $_POST['todoId'];
+            $todoInfo = Todos::fetch($todo_id);
+            $num = count($todoInfo);
+            if($num>0){
+                $response = $todoInfo;
+            }else{
+                $response['status']=200;
+                $response['message']="No data found!";
+            }
+            echo json_encode($response);
+
+        }
+    }
+
+    /**
+     * Update expense
+     */
+    public function updateSingleTodoRecord(){
+
+//        var_dump($_POST);
+//        exit();
+
+        if(isset($_POST['id']) && $_POST['id']!=''){
+
+            $re = Todos::update($_POST);
+            if($re){
+                echo 'Basic Info Updated';
+
+            }else{
+                echo 'Something went Wrong';
+            }
+
+
+        }
+    }
+
+    /**
+     * Delete expense
+     */
+    public function deleteTodoRecord(){
+
+        if(isset($_POST['id'])){
+            $response['status']=false;
+            $response['message']='Application says Don\'t delete anything, just change or modify it to make new entry' ;
+            echo json_encode($response);
+
+        }
+    }
+
+
+    // ====================================================
+    // Enquiry Functions
+    // ==================================================
+
+
+    /**
+     * Submit new enquiry
+     */
+    public function insertNewEnquiryRecord(){
+
+        if(isset($_POST['message']) && $_POST['message']!=''){
+
+            $re = Query::insert($_POST);
+            if(!$re){
+                echo 'Please fill all the fields correctly';
+            }
+            echo 'Your enquiry submitted successfully, we will respond back soon';
+
+        }
+    }
+
+    /**
+     * Search enquires dynamically
+     */
+    public function searchEnquires(){
+
+        $limit = 10;
+        $page = 1;
+
+        if($_POST['page'] > 1){
+            $start = (($_POST['page']-1) * $limit);
+            $page = $_POST['page'];
+        }else{
+            $start = 0;
+        }
+
+        $results = Enquiry::liveSearch($start,$limit);
+        $total_data = Enquiry::liveSearchCount();
+
+        $output = '<label>Total Records - '.$total_data.'</label>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Mobile</th>
+                    <th scope="col">View</th>                                      
+                    <th scope="col">Status</th>                                      
+                    <th scope="col">Trash</th>                
+                </tr>';
+
+        if($total_data > 0){
+
+            foreach($results as $row){
+                $output .= '<tr>
+                    <td>'.$row['id'].'</td>                
+                    <td>'.$row['name'].'</td>
+                    <td>'.$row['mobile'].'</td>
+                    <td><button onclick="getEnquiryInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-info">View</button></td>   
+                    <td>'.$row['response'].'</td>
+                    <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input text-success" type="checkbox" id="flexSwitchCheckDefault" '.($row['active']==1?'checked':'').'>
+                          <label class="form-check-label text-muted fst-italic" for="flexSwitchCheckDefault">'.($row['active']==1?'':'thrashed').'</label>
+                        </div>
+                    </td>
+                    
+                </tr>';
+            }
+
+        }
+        else{
+
+            $output .= '<tr><td colspan="4">No data found</td></tr>';
+
+        }
+
+        $output .= '</table></br>
+            <div align="center">
+                <ul class="pagination">
+        ';
+
+        $total_links = ceil($total_data/$limit);
+        $previous_link = '';
+        $next_link = '';
+        $page_link ='';
+
+
+        if($total_links > 4){
+            if($page<5){
+                for($count=1; $count<=5; $count++){
+
+                    $page_array[]=$count;
+                }
+                $page_array[]='...';
+                $page_array[]=$total_links;
+            }else{
+                $end_limit = $total_links - 5 ;
+                if($page > $end_limit){
+
+                    $page_array[] = 1;
+                    $page_array[] = '...';
+
+                    for($count=$end_limit; $count<=$total_links; $count++){
+                        $page_array[]=$count;
+                    }
+                }else{
+                    $page_array[]=1;
+                    $page_array[]='...';
+                    for($count = $page-1; $count<=$page+1; $count++){
+                        $page_array[]=$count;
+                    }
+                    $page_array[]=1;
+                    $page_array[]=$total_links;
+                }
+            }
+        }
+        else{
+            for($count=1; $count <= $total_links; $count++){
+                $page_array[] = $count;
+            }
+        }
+        // checked
+        $page_array[]=0;
+        for($count = 0; $count < count($page_array); $count++)
+        {
+            if($page == $page_array[$count])
+            {
+                $page_link .= '<li class="page-item active">
+                      <a class="page-link" href="#">'.$page_array[$count].' <span class="sr-only">(current)</span></a>
+                    </li>
+                    ';
+
+                $previous_id = $page_array[$count] - 1;
+                if($previous_id > 0)
+                {
+                    $previous_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$previous_id.'">Previous</a></li>';
+                }
+                else
+                {
+                    $previous_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Previous</a>
+                      </li>
+                      ';
+                }
+                $next_id = $page_array[$count] + 1;
+                if($next_id >= $total_links)
+                {
+                    $next_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                      </li>';
+                }
+                else
+                {
+                    $next_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$next_id.'">Next</a></li>';
+                }
+            }
+            else
+            {
+                if($page_array[$count] == '...')
+                {
+                    $page_link .= '
+                      <li class="page-item disabled">
+                          <a class="page-link" href="#">...</a>
+                      </li>
+                      ';
+                }
+                else
+                {
+                    $page_link .= '<li class="page-item"><a class="page-link" href="javascript:void(0)" 
+                    data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>';
+                }
+            }
+        }
+
+        $output .= $previous_link . $page_link . $next_link;
+        $output .= '</ul></div>';
+
+        echo $output;
+    }
+
+    /**
+     *  Fetch group
+     */
+    public function fetchSingleEnquiryRecord(){
+
+        if(isset($_POST['enquiryId']) && isset($_POST['enquiryId'])!=''){
+
+            $enquiry_id = $_POST['enquiryId'];
+            $enquiryInfo = Enquiry::fetch($enquiry_id);
+            $num = count($enquiryInfo);
+            if($num>0){
+                $response = $enquiryInfo;
+            }else{
+                $response['status']=200;
+                $response['message']="No data found!";
+            }
+            echo json_encode($response);
+
+        }
+    }
+
+    /**
+     * Update expense
+     */
+    public function updateSingleEnquiryRecord(){
+
+//        var_dump($_POST);
+//        exit();
+
+        if(isset($_POST['id']) && $_POST['id']!=''){
+
+            $re = Enquiry::update($_POST);
+            if($re){
+                echo 'Basic Info Updated';
+
+            }else{
+                echo 'Something went Wrong';
+            }
+
+
+        }
+    }
+
+    // ====================================================
+    // Enrolls Functions
+    // ==================================================
+
+    /**
+     * Search enquires dynamically
+     */
+    public function searchEnrolls(){
+
+        $limit = 10;
+        $page = 1;
+
+        if($_POST['page'] > 1){
+            $start = (($_POST['page']-1) * $limit);
+            $page = $_POST['page'];
+        }else{
+            $start = 0;
+        }
+
+        $results = Enroll::liveSearch($start,$limit);
+        $total_data = Enroll::liveSearchCount();
+
+        $output = '<label>Total Records - '.$total_data.'</label>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Mobile</th>
+                    <th scope="col">Email</th>                                      
+                    <th scope="col">View</th>                                      
+                    <th scope="col">Edit</th>                
+                </tr>';
+
+        if($total_data > 0){
+
+            foreach($results as $row){
+                $output .= '<tr>
+                    <td>'.$row['id'].'</td>                
+                    <td>'.$row['first_name'].' '.$row['last_name'].'</td>
+                    <td>'.$row['mobile'].'</td>
+                    <td>'.$row['email'].'</td>
+                    <td><button onclick="getEnrollInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-info">View</button></td>   
+                    <td><button onclick="addInfo2Enroll('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-danger">Add Info</button></td>   
+                    
+                </tr>';
+            }
+
+        }
+        else{
+
+            $output .= '<tr><td colspan="4">No data found</td></tr>';
+
+        }
+
+        $output .= '</table></br>
+            <div align="center">
+                <ul class="pagination">
+        ';
+
+        $total_links = ceil($total_data/$limit);
+        $previous_link = '';
+        $next_link = '';
+        $page_link ='';
+
+
+        if($total_links > 4){
+            if($page<5){
+                for($count=1; $count<=5; $count++){
+
+                    $page_array[]=$count;
+                }
+                $page_array[]='...';
+                $page_array[]=$total_links;
+            }else{
+                $end_limit = $total_links - 5 ;
+                if($page > $end_limit){
+
+                    $page_array[] = 1;
+                    $page_array[] = '...';
+
+                    for($count=$end_limit; $count<=$total_links; $count++){
+                        $page_array[]=$count;
+                    }
+                }else{
+                    $page_array[]=1;
+                    $page_array[]='...';
+                    for($count = $page-1; $count<=$page+1; $count++){
+                        $page_array[]=$count;
+                    }
+                    $page_array[]=1;
+                    $page_array[]=$total_links;
+                }
+            }
+        }
+        else{
+            for($count=1; $count <= $total_links; $count++){
+                $page_array[] = $count;
+            }
+        }
+        // checked
+        $page_array[]=0;
+        for($count = 0; $count < count($page_array); $count++)
+        {
+            if($page == $page_array[$count])
+            {
+                $page_link .= '<li class="page-item active">
+                      <a class="page-link" href="#">'.$page_array[$count].' <span class="sr-only">(current)</span></a>
+                    </li>
+                    ';
+
+                $previous_id = $page_array[$count] - 1;
+                if($previous_id > 0)
+                {
+                    $previous_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$previous_id.'">Previous</a></li>';
+                }
+                else
+                {
+                    $previous_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Previous</a>
+                      </li>
+                      ';
+                }
+                $next_id = $page_array[$count] + 1;
+                if($next_id >= $total_links)
+                {
+                    $next_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                      </li>';
+                }
+                else
+                {
+                    $next_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$next_id.'">Next</a></li>';
+                }
+            }
+            else
+            {
+                if($page_array[$count] == '...')
+                {
+                    $page_link .= '
+                      <li class="page-item disabled">
+                          <a class="page-link" href="#">...</a>
+                      </li>
+                      ';
+                }
+                else
+                {
+                    $page_link .= '<li class="page-item"><a class="page-link" href="javascript:void(0)" 
+                    data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>';
+                }
+            }
+        }
+
+        $output .= $previous_link . $page_link . $next_link;
+        $output .= '</ul></div>';
+
+        echo $output;
+    }
+
+    // ====================================================
+    // Notices Functions
+    // ==================================================
+
+    /**
+     * Search notices dynamically
+     */
+    public function searchNotices(){
+
+        $limit = 10;
+        $page = 1;
+
+        if($_POST['page'] > 1){
+            $start = (($_POST['page']-1) * $limit);
+            $page = $_POST['page'];
+        }else{
+            $start = 0;
+        }
+
+        $results = Notice::liveSearch($start,$limit);
+        $total_data = Notice::liveSearchCount();
+
+        $output = '<label>Total Records - '.$total_data.'</label>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Heading</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Active</th>         
+                    <th scope="col">Edit</th>                
+                </tr>';
+
+        if($total_data > 0){
+
+            foreach($results as $row){
+                $output .= '<tr>
+                    <td>'.$row['id'].'</td>                
+                    <td>'.$row['heading'].'</td>
+                    <td>'.$row['description'].'</td>
+                    <td>'.$row['active'].'</td>
+                    <td><button onclick="getNoticeInfo('.$row['id'].')" type="button" class="mb-1 btn btn-sm btn-info">Edit</button></td>    
+                </tr>';
+            }
+
+        }
+        else{
+
+            $output .= '<tr><td colspan="4">No data found</td></tr>';
+
+        }
+
+        $output .= '</table></br>
+            <div align="center">
+                <ul class="pagination">
+        ';
+
+        $total_links = ceil($total_data/$limit);
+        $previous_link = '';
+        $next_link = '';
+        $page_link ='';
+
+
+        if($total_links > 4){
+            if($page<5){
+                for($count=1; $count<=5; $count++){
+
+                    $page_array[]=$count;
+                }
+                $page_array[]='...';
+                $page_array[]=$total_links;
+            }else{
+                $end_limit = $total_links - 5 ;
+                if($page > $end_limit){
+
+                    $page_array[] = 1;
+                    $page_array[] = '...';
+
+                    for($count=$end_limit; $count<=$total_links; $count++){
+                        $page_array[]=$count;
+                    }
+                }else{
+                    $page_array[]=1;
+                    $page_array[]='...';
+                    for($count = $page-1; $count<=$page+1; $count++){
+                        $page_array[]=$count;
+                    }
+                    $page_array[]=1;
+                    $page_array[]=$total_links;
+                }
+            }
+        }
+        else{
+            for($count=1; $count <= $total_links; $count++){
+                $page_array[] = $count;
+            }
+        }
+        // checked
+        $page_array[]=0;
+        for($count = 0; $count < count($page_array); $count++)
+        {
+            if($page == $page_array[$count])
+            {
+                $page_link .= '<li class="page-item active">
+                      <a class="page-link" href="#">'.$page_array[$count].' <span class="sr-only">(current)</span></a>
+                    </li>
+                    ';
+
+                $previous_id = $page_array[$count] - 1;
+                if($previous_id > 0)
+                {
+                    $previous_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$previous_id.'">Previous</a></li>';
+                }
+                else
+                {
+                    $previous_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Previous</a>
+                      </li>
+                      ';
+                }
+                $next_id = $page_array[$count] + 1;
+                if($next_id >= $total_links)
+                {
+                    $next_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                      </li>';
+                }
+                else
+                {
+                    $next_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$next_id.'">Next</a></li>';
+                }
+            }
+            else
+            {
+                if($page_array[$count] == '...')
+                {
+                    $page_link .= '
+                      <li class="page-item disabled">
+                          <a class="page-link" href="#">...</a>
+                      </li>
+                      ';
+                }
+                else
+                {
+                    $page_link .= '<li class="page-item"><a class="page-link" href="javascript:void(0)" 
+                    data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>';
+                }
+            }
+        }
+
+        $output .= $previous_link . $page_link . $next_link;
+        $output .= '</ul></div>';
+
+        echo $output;
+    }
+
+
+    // ====================================================
+    // Staffs Ajax Functions
+    // ==================================================
+
+
+    /**
+     * Search staff dynamically
+     */
+    public function searchStaff(){
+
+        $limit = 10;
+        $page = 1;
+
+        if($_POST['page'] > 1){
+            $start = (($_POST['page']-1) * $limit);
+            $page = $_POST['page'];
+        }else{
+            $start = 0;
+        }
+
+        $results = Staff::liveSearch($start,$limit);
+        $total_data = Staff::liveSearchCount();
+
+        $output = '<label>Total Records - '.$total_data.'</label>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>id</th>
+                    <th>name</th>                                       
+                    <th>mobile</th>
+                    <th>email</th> 
+                    <th>Staff A/c</th>                                                                        
+                    <th>Details</th>                                                                        
+                    <th>Salary</th></tr>';
+
+        if($total_data > 0){
+
+            foreach($results as $row){
+                $output .= '<tr>
+                <td>'.$row->id.'</td>
+                <td>'.$row->first_name.' '.$row->last_name.'</td>                            
+                <td>'.$row->mobile.'</td>
+                <td>'.$row->email.'</td>
+                <td>
+                <button onclick="getStaffDetails('.$row->id.')" type="button" class="mb-1 btn btn-sm btn-info">View</button>
+                <button onclick="getStaffInfo('.$row->id.')" type="button" class="mb-1 btn btn-sm btn-secondary">Edit</button>
+                </td>
+                <td>
+                <button onclick="showStaffDetailsForm('.$row->id.')" type="button" class="mb-1 btn btn-sm btn-primary">Add</button>  
+                <button onclick="makeAdminForm('.$row->id.')" type="button" class="mb-1 btn btn-sm btn-warning">Admin</button>      
+                </td>               
+                <td><button onclick="addNextSalary('.$row->id.')" type="button" class="mb-1 btn btn-sm btn-success">Paid</button></td>
+                </tr>';
+            }
+
+        }
+        else{
+
+            $output .= '<tr><td colspan="4">No data found</td></tr>';
+
+        }
+
+        $output .= '</table></br>
+            <div align="center">
+                <ul class="pagination">
+        ';
+
+        $total_links = ceil($total_data/$limit);
+        $previous_link = '';
+        $next_link = '';
+        $page_link ='';
+
+
+        if($total_links > 4){
+            if($page<5){
+                for($count=1; $count<=5; $count++){
+
+                    $page_array[]=$count;
+                }
+                $page_array[]='...';
+                $page_array[]=$total_links;
+            }else{
+                $end_limit = $total_links - 5 ;
+                if($page > $end_limit){
+
+                    $page_array[] = 1;
+                    $page_array[] = '...';
+
+                    for($count=$end_limit; $count<=$total_links; $count++){
+                        $page_array[]=$count;
+                    }
+                }else{
+                    $page_array[]=1;
+                    $page_array[]='...';
+                    for($count = $page-1; $count<=$page+1; $count++){
+                        $page_array[]=$count;
+                    }
+                    $page_array[]=1;
+                    $page_array[]=$total_links;
+                }
+            }
+        }
+        else{
+            for($count=1; $count <= $total_links; $count++){
+                $page_array[] = $count;
+            }
+        }
+        // checked
+        $page_array[]=0;
+        for($count = 0; $count < count($page_array); $count++)
+        {
+            if($page == $page_array[$count])
+            {
+                $page_link .= '<li class="page-item active">
+                      <a class="page-link" href="#">'.$page_array[$count].' <span class="sr-only">(current)</span></a>
+                    </li>
+                    ';
+
+                $previous_id = $page_array[$count] - 1;
+                if($previous_id > 0)
+                {
+                    $previous_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$previous_id.'">Previous</a></li>';
+                }
+                else
+                {
+                    $previous_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Previous</a>
+                      </li>
+                      ';
+                }
+                $next_id = $page_array[$count] + 1;
+                if($next_id >= $total_links)
+                {
+                    $next_link = '<li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                      </li>';
+                }
+                else
+                {
+                    $next_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$next_id.'">Next</a></li>';
+                }
+            }
+            else
+            {
+                if($page_array[$count] == '...')
+                {
+                    $page_link .= '
+                      <li class="page-item disabled">
+                          <a class="page-link" href="#">...</a>
+                      </li>
+                      ';
+                }
+                else
+                {
+                    $page_link .= '<li class="page-item"><a class="page-link" href="javascript:void(0)" 
+                    data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>';
+                }
+            }
+        }
+
+        $output .= $previous_link . $page_link . $next_link;
+        $output .= '</ul></div>';
 
         echo $output;
     }

@@ -16,6 +16,16 @@ class Notice extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function fetchAll(): array
+    {
+        $sql = "SELECT * FROM notices ORDER BY id DESC";
+        $pdo=Model::getDB();
+        $stmt=$pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     public static function update($arr): bool
     {
 
@@ -52,7 +62,8 @@ class Notice extends Model
         $pdo=Model::getDB();
         $stmt=$pdo->prepare($filter_query);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+//        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
     }
@@ -67,7 +78,6 @@ class Notice extends Model
             OR description LIKE "%'.str_replace('', '%', $_POST['query']).'%"            
             ';
         }
-
 
         $pdo=Model::getDB();
         $stmt=$pdo->prepare($query);
